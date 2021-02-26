@@ -5,6 +5,9 @@ import os
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
 
+#TEST DO GITA
+#DRUGA LINIA
+
 #nazwa pliku do zmiennej `source_file_old_name`
 source_file = []
 for file_name in os.listdir('<DIR>'):
