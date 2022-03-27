@@ -59,6 +59,8 @@ def main():
         data_frame["etl_filename"] = file
         data_frame["etl_timestamp"] = pandas.to_datetime("now").replace(microsecond=0)
 
+        file_path.file_rename(file, directory)
+
         with db.UseDB() as cursor:
             cursor.execute("SELECT current_version()").fetchone()
 
@@ -77,9 +79,11 @@ def main():
                 "TRUNCATE TABLE DEMO_DB.PUBLIC.STAGE_REJESTR_APTEK;"
             ).fetchone()
 
-        file_path.file_rename(file, directory)
+        # file_path.file_rename(file, directory)
 
     except file_get.FileNotFoundError as e:
+        print(e)
+    except file_get.FileExistsError as e:
         print(e)
     except ConnectionError as err:
         print("Connection error: ", str(err))

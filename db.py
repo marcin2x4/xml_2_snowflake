@@ -1,3 +1,4 @@
+from tempfile import tempdir
 import snowflake.connector
 from snowflake.connector import errors as sce
 from snowflake.connector.pandas_tools import write_pandas
@@ -18,11 +19,11 @@ class SQLError(Exception):
 # context manager
 class UseDB:
     def __init__(self) -> None:
-        self.user = ""
-        self.password = ""
-        self.account = ""
-        self.database = ""
-        self.schema = ""
+        self.user = "szpotma"
+        self.password = ":Alga89666:"
+        self.account = "yn90458.europe-west4.gcp"
+        self.database = "DEMO_DB"
+        self.schema = "PUBLIC"
 
     def __enter__(self) -> "cursor":
         try:
@@ -39,8 +40,12 @@ class UseDB:
             raise ConnectionError(err)
         except snowflake.connector.errors.ProgrammingError as err:
             raise CredentialsError(err)
-        except:
-            print("error of other type occured in class useDB, please debug")
+        # except:
+        #     print("error of other type occured in class useDB, please debug")
+        except Exception as ex:
+            template = "An exception of type {0} occured in class useDB. Arguments:\n{1!r}"
+            message = template.format(type(ex).__name__, ex.args)
+            print(message)
 
     def __exit__(self, exc_type, exc_value, exc_trace):
         query_id = self.cursor.sfqid
@@ -62,6 +67,15 @@ class UseDB:
 
         return query_id
 
+    def extra_attrs(**kwargs):
+        def decorate(f):
+            for k in kwargs:
+                setattr(f, k, kwargs[k])
+                print(f"ELT's {k}: {kwargs[k]}")
+            return f
+        return decorate
+
+    @extra_attrs(version="1.0", process_name="REJESTR_APTEK")
     def frame_writer(self, data_frame, table_name, bool):
         try:
             self.conn = snowflake.connector.connect(

@@ -1,10 +1,11 @@
 import fnmatch
 import os
 
-
 class FileNotFoundError(Exception):
     pass
 
+class FileExistsError(Exception):
+    pass
 
 class FileGet:
     def __init__(self, path_dir, file_name):
@@ -30,4 +31,9 @@ class FileGet:
     @staticmethod
     def file_rename(file, dir):
         source_file_new_name = "old_" + file
-        os.rename(os.path.join(dir, file), os.path.join(dir, source_file_new_name))
+
+        if os.path.isfile(dir + source_file_new_name):
+            raise FileExistsError("this file was already processed!")
+        else:
+            os.rename(os.path.join(dir, file), os.path.join(dir, source_file_new_name))
+
