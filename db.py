@@ -19,11 +19,11 @@ class SQLError(Exception):
 # context manager
 class UseDB:
     def __init__(self) -> None:
-        self.user = "szpotma"
-        self.password = ":Alga89666:"
-        self.account = "yn90458.europe-west4.gcp"
-        self.database = "DEMO_DB"
-        self.schema = "PUBLIC"
+        self.user = ""
+        self.password = ""
+        self.account = ""
+        self.database = ""
+        self.schema = ""
 
     def __enter__(self) -> "cursor":
         try:
