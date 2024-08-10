@@ -25,7 +25,7 @@ class UseDB:
         self.database = ""
         self.schema = ""
 
-    def __enter__(self) -> "cursor":
+    def __enter__(self) -> "cursor": # type: ignore
         try:
             self.conn = snowflake.connector.connect(
                 account=self.account,
