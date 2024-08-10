@@ -2,7 +2,7 @@ from tempfile import tempdir
 import snowflake.connector
 from snowflake.connector import errors as sce
 from snowflake.connector.pandas_tools import write_pandas
-
+from functools import wraps
 
 class ConnectionError(Exception):
     pass
@@ -67,15 +67,6 @@ class UseDB:
 
         return query_id
 
-    def extra_attrs(**kwargs):
-        def decorate(f):
-            for k in kwargs:
-                setattr(f, k, kwargs[k])
-                print(f"ELT's {k}: {kwargs[k]}")
-            return f
-        return decorate
-
-    @extra_attrs(version="1.0", process_name="REJESTR_APTEK")
     def frame_writer(self, data_frame, table_name, bool):
         try:
             self.conn = snowflake.connector.connect(

@@ -4,8 +4,36 @@ import pandas
 import sys
 import db
 from db import ConnectionError, CredentialsError, SQLError
+import datetime
+from functools import wraps
+import time
+
+def extra_attrs(func):
+    @wraps(func)
+    def new_fun(*args, **kwargs):
+        print('Arguments are: ' , args)
+        print('Key-word arguments are: ' , kwargs)
+        func(*args, **kwargs)
+    return new_fun
+
+@extra_attrs
+def logger(**kwargs):
+    print("just logging stuff..")
+    print(kwargs["date"])
 
 
+def time_note(func):
+    @wraps(func)
+    def time_note_wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time-start_time
+        print(f'{func.__name__}{args} {kwargs} took {total_time:.4f} seconds')
+        return result
+    return time_note_wrapper
+
+@time_note
 def main():
 
     dir = sys.argv[1]
@@ -59,6 +87,8 @@ def main():
         data_frame["etl_filename"] = file
         data_frame["etl_timestamp"] = pandas.to_datetime("now").replace(microsecond=0)
 
+        # print(data_frame)
+
         file_path.file_rename(file, directory)
 
         with db.UseDB() as cursor:
@@ -79,7 +109,7 @@ def main():
                 "TRUNCATE TABLE DEMO_DB.PUBLIC.STAGE_REJESTR_APTEK;"
             ).fetchone()
 
-        # file_path.file_rename(file, directory)
+        file_path.file_rename(file, directory)
 
     except file_get.FileNotFoundError as e:
         print(e)
@@ -97,4 +127,9 @@ def main():
 
 
 if __name__ == "__main__":
+    logger(date=datetime.date.today())
     main()
+    print(logger.__name__)
+    print(logger.__doc__)
+    print(main.__name__)
+    print(main.__doc__)
