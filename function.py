@@ -127,9 +127,9 @@ def main():
 
 
 if __name__ == "__main__":
-    logger(date=datetime.date.today())
+    # logger(date=datetime.date.today())
     main()
-    print(logger.__name__)
-    print(logger.__doc__)
-    print(main.__name__)
-    print(main.__doc__)
+    # print(logger.__name__)
+    # print(logger.__doc__)
+    # print(main.__name__)
+    # print(main.__doc__)
